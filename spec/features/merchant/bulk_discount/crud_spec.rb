@@ -67,7 +67,24 @@ RSpec.describe "As a merchant employee" do
       end
 
       it "with one or more missing fields, I still see the new discount form with an error flash message" do
+        percent = 5
+        threshold = 10
+        fill_in "discount[discount_percent]", with: percent
 
+        click_button "Create Bulk Discount"
+
+        expect(find_field("discount[discount_percent]").value).to eq(percent.to_s)
+        expect(find_field("discount[item_threshold]").value).to eq("")
+        expect(page).to have_content("Item threshold can't be blank")
+
+        fill_in "discount[discount_percent]", with: ""
+        fill_in "discount[item_threshold]", with: threshold
+
+        click_button "Create Bulk Discount"
+
+        expect(find_field("discount[discount_percent]").value).to eq("")
+        expect(find_field("discount[item_threshold]").value).to eq(threshold.to_s)
+        expect(page).to have_content("Discount percent can't be blank")
       end
 
       it "with incorrectly filled fields I still see the new discount form with an error flash message" do
