@@ -125,17 +125,85 @@ RSpec.describe Cart do
     end
 
     describe "#discount_subtotal" do
-      it 'should calculate the discount for an item that reaches threshold' do
+      before :each do
         @cart.add_item(@giant.id.to_s)
         @cart.add_item(@giant.id.to_s)
         @cart.add_item(@giant.id.to_s)
 
-        total = @cart.total_unique_item(@giant) * @giant.price
+        @total = @cart.total_unique_item(@giant) * @giant.price
         percent_discount = (@discount.discount_percent/100.to_f)
-        total_discount = (total - (total * percent_discount))
-        expect(@cart.discount_subtotal(@giant, total)).to eq(total_discount)
-        expect(@cart.subtotal(@giant)).to eq(total_discount)
+        @total_discount = (@total - (@total * percent_discount))
       end
+
+      it 'should calculate the discount for an item that reaches threshold' do
+        expect(@cart.discount_subtotal(@giant, @total)).to eq(@total_discount)
+        expect(@cart.subtotal(@giant)).to eq(@total_discount)
+      end
+
+      it 'should not calculate the discount for an item under threshold or from a different merchant' do
+        @cart.add_item(@hippo.id.to_s)
+        @cart.add_item(@hippo.id.to_s)
+        @cart.add_item(@hippo.id.to_s)
+        @cart.add_item(@hippo.id.to_s)
+        @cart.add_item(@hippo.id.to_s)
+        expected_price = @cart.total_unique_item(@hippo) * @hippo.price
+        expect(@cart.subtotal(@hippo)).to eq(expected_price)
+      end
+
+      it 'should calculate the discount with the largest percentage off' do
+        @cart.add_item(@giant.id.to_s)
+
+        @discount_2 = create(:discount, discount_percent: 10, item_threshold: 6)
+        @discount_2.items << @megan.items
+
+        @total = @cart.total_unique_item(@giant) * @giant.price
+        percent_discount_2 = (@discount_2.discount_percent/100.to_f)
+        @total_discount_2 = (@total - (@total * percent_discount_2))
+
+        expect(@cart.discount_subtotal(@giant, @total)).to eq(@total_discount_2)
+        expect(@cart.subtotal(@giant)).to eq(@total_discount_2)
+      end
+
+      it 'should calculate the discount with the largest percentage off' do
+        @discount_2 = create(:discount, discount_percent: 10, item_threshold: 4)
+        @discount_2.items << @megan.items
+
+        @total = @cart.total_unique_item(@giant) * @giant.price
+        percent_discount_2 = (@discount_2.discount_percent/100.to_f)
+        @total_discount_2 = (@total - (@total * percent_discount_2))
+
+        expect(@cart.discount_subtotal(@giant, @total)).to eq(@total_discount_2)
+        expect(@cart.subtotal(@giant)).to eq(@total_discount_2)
+      end
+    end
+
+    it '#lowest_threshold' do
+      @discount_2 = create(:discount, discount_percent: 10, item_threshold: 6)
+      @discount_2.items << @megan.items
+
+      expect(@cart.lowest_threshold(@giant).first).to eq(@discount)
+
+      @discount_3 = create(:discount, discount_percent: 10, item_threshold: 2)
+      @discount_3.items << @megan.items
+
+      expect(@cart.lowest_threshold(@giant).first).to eq(@discount_3)
+    end
+
+    it '#highest_discount' do
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      
+      @discount_2 = create(:discount, discount_percent: 10, item_threshold: 6)
+      @discount_2.items << @megan.items
+
+      expect(@cart.highest_discount(@giant).first).to eq(@discount_2)
+
+      @discount_3 = create(:discount, discount_percent: 15, item_threshold: 2)
+      @discount_3.items << @megan.items
+
+      expect(@cart.highest_discount(@giant).first).to eq(@discount_3)
     end
 
   end
