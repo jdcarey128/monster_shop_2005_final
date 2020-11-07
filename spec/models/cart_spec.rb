@@ -101,7 +101,26 @@ RSpec.describe Cart do
       end
 
       it 'should only apply discount to items of merchant with discount' do
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@hippo.id.to_s)
+        @cart.add_item(@hippo.id.to_s)
+        @cart.add_item(@hippo.id.to_s)
+        @cart.add_item(@hippo.id.to_s)
+        @cart.add_item(@hippo.id.to_s)
+        expect(@cart.apply_discount?(@giant)).to eq(true)
+        expect(@cart.apply_discount?(@hippo)).to eq(false)
+      end
 
+      it 'should apply discount if there are more items than threshold' do
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+        expect(@cart.apply_discount?(@giant)).to eq(true)
+        @cart.add_item(@giant.id.to_s)
+        expect(@cart.apply_discount?(@giant)).to eq(true)
       end
     end
 
