@@ -63,7 +63,7 @@ FactoryBot.define do
   factory :item_order do
     item
     order
-    price { Faker::Commerce.price }
+    price { rand(1..5000)}
     quantity { 1 }
   end
 
