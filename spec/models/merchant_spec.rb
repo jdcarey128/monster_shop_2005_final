@@ -13,6 +13,7 @@ describe Merchant, type: :model do
     it {should have_many :items}
     it {should have_many :users}
     it {should have_many(:orders).through(:items)}
+    it {should have_many(:discounts).through(:items)}
   end
 
   describe 'instance methods' do
@@ -276,6 +277,44 @@ describe Merchant, type: :model do
 
         expect(merchant.order_total(order_1)).to eq(sum_1)
         expect(merchant_2.order_total(order_1)).to eq(sum_2)
+      end
+    end
+
+    describe "#distinct_discounts" do
+      it "returns distinct discounts for merchant" do
+        merchant = create(:merchant)
+        item_1 = create(:item, merchant: merchant)
+        item_2 = create(:item, merchant: merchant)
+        item_3 = create(:item, merchant: merchant)
+        discount = create(:discount)
+        discount_2 = create(:discount)
+
+        items = [item_1, item_2, item_3]
+
+        discount.items << items
+
+        expect(merchant.distinct_discounts).to eq([discount])
+
+        discount_2.items << items
+
+        expect(merchant.distinct_discounts.sort).to eq([discount, discount_2].sort)
+      end
+
+      it "returns distinct discounts only for merchant" do
+        merchant = create(:merchant)
+        merchant_2 = create(:merchant)
+        item_1 = create(:item, merchant: merchant)
+        item_2 = create(:item, merchant: merchant)
+        item_3 = create(:item, merchant: merchant_2)
+        discount = create(:discount)
+        discount_2 = create(:discount)
+
+        items = [item_1, item_2]
+        discount.items << items
+        discount_2.items << item_3
+
+        expect(merchant.distinct_discounts.sort).to eq([discount].sort)
+        expect(merchant_2.distinct_discounts).to eq([discount_2])
       end
     end
 

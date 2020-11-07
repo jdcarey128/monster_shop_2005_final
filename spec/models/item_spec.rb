@@ -15,6 +15,8 @@ describe Item, type: :model do
     it {should have_many :reviews}
     it {should have_many :item_orders}
     it {should have_many(:orders).through(:item_orders)}
+    it {should have_many(:item_discounts)}
+    it {should have_many(:discounts).through(:item_discounts)}
   end
 
   describe 'class methods' do

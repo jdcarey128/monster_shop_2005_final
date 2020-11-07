@@ -3,12 +3,15 @@ class Item < ApplicationRecord
   has_many :reviews, dependent: :destroy
   has_many :item_orders
   has_many :orders, through: :item_orders
+  has_many :item_discounts
+  has_many :discounts, through: :item_discounts
 
   validates_presence_of :name,
                         :description,
                         :price,
                         :image,
                         :inventory
+                        
   validates_inclusion_of :active?, :in => [true, false]
   validates_numericality_of :price, greater_than: 0
   validates_numericality_of :inventory, greater_than_or_equal_to: 0

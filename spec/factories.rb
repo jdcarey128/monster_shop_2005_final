@@ -28,15 +28,15 @@ FactoryBot.define do
     end
 
     trait :with_item_orders do
-      transient do 
+      transient do
         item_count { 3 }
       end
-      
+
       after(:create) do |merchant, evaluator|
         merchant.items << create_list(:item, evaluator.item_count)
-        create(:item_order, item: merchant.items[0]) 
-        create(:item_order, item: merchant.items[1]) 
-        create(:item_order, item: merchant.items[2]) 
+        create(:item_order, item: merchant.items[0])
+        create(:item_order, item: merchant.items[1])
+        create(:item_order, item: merchant.items[2])
       end
     end
   end
@@ -65,5 +65,10 @@ FactoryBot.define do
     order
     price { Faker::Commerce.price }
     quantity { 1 }
+  end
+
+  factory :discount do
+    discount_percent { Faker::Number.between(from: 1, to: 100) }
+    item_threshold { Faker::Number.between(from: 1, to: 100) }
   end
 end

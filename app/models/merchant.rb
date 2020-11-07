@@ -3,6 +3,8 @@ class Merchant < ApplicationRecord
   has_many :item_orders, through: :items
   has_many :orders, through: :items
   has_many :users, -> { where(role: 1)}
+  has_many :discounts, through: :items
+
 
   validates_presence_of :name,
                         :address,
@@ -53,6 +55,10 @@ class Merchant < ApplicationRecord
 
   def order_total(order)
     self.items.joins(:item_orders).where('item_orders.order_id = ?', order).sum('item_orders.price')
+  end
+
+  def distinct_discounts
+    self.discounts.distinct
   end
 
 end

@@ -1,3 +1,20 @@
 
+<h4 align="center"><%= link_to "My Items", merchant_items_path %></h4>
 <%= render 'shared/merchant_dashboard' %>
-<h2 align="center"><%= link_to "My Items", merchant_items_path %></h2>
+
+<center>
+  <% if current_merchant? %>
+    <section class="bulk-discounts">
+      <h3 align="center">Bulk Discounts</h3>
+      <p><%= link_to "Create New Bulk Discount", "/merchant/discounts/new" %></p>
+        <% @discounts.each do |discount| %>
+          <div class="discount" id="discount-<%= discount.id %>">
+            <b align="center"><%= format_percent(discount.discount_percent) %> | </b>
+            <i align="center"><%= format_threshold(discount.item_threshold) %></i><b> | </b>
+            <i><%= link_to "Edit Discount", edit_merchant_discount_path(discount) %></i><b> | </b>
+            <i><%= link_to "Delete Discount", merchant_discount_path(discount), method: :delete %></i>
+          </div><br>
+        <% end %>
+    </section>
+  <% end %>
+</center>
