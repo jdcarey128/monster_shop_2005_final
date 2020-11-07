@@ -21,6 +21,10 @@ class Cart
     @contents.values.sum
   end
 
+  def total_unique_item(item)
+    @contents[item.id.to_s]
+  end
+
   def items
     item_quantity = {}
     @contents.each do |item_id,quantity|
@@ -30,6 +34,8 @@ class Cart
   end
 
   def subtotal(item)
+    #add discount
+    require "pry"; binding.pry
     item.price * @contents[item.id.to_s]
   end
 

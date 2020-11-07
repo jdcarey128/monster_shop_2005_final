@@ -79,5 +79,10 @@ RSpec.describe Cart do
       expect(@cart.inventory_check(@ogre)).to eq(true)
     end
 
+    it '#total_unique_item' do
+      expect(@cart.total_unique_item(@giant)).to eq(2)
+      expect(@cart.total_unique_item(@ogre)).to eq(1)
+    end
+
   end
 end
