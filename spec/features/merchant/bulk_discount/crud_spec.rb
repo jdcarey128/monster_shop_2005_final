@@ -21,7 +21,26 @@ RSpec.describe "As a merchant employee" do
   end
 
   describe "when I can click the link to 'Create New Bulk Discount'" do
-    it "and I see a form to create a new discount and item threshold" do
+    before :each do
+      visit login_path
+      merchant = create(:merchant)
+      merchant_employee = create(:user, role: 1, merchant: merchant)
+
+      fill_in :email, with: merchant_employee.email
+      fill_in :password, with: 'password'
+      click_button 'Login'
+
+      within '.bulk-discounts' do
+        click_link 'Create New Bulk Discount'
+      end
+    end
+
+    it "I see a form to create a new discount and item threshold" do
+      expect(current_path).to eq("/merchant/discounts/new")
+      save_and_open_page
+      expect(find_field("discount[discount_percent]").value).to eq(nil)
+      expect(find_field("discount[item_threshold]").value).to eq(nil)
+      expect(page).to have_button("Create Bulk Discount")
     end
 
     describe "when I click 'Create Bulk Discount' within a new bulk discount form" do
