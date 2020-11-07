@@ -27,7 +27,7 @@ class Cart
 
   def apply_discount?(item)
     if item.merchant.discounts != []
-      item.merchant.distinct_discounts.order(:item_threshold).limit(1).first.item_threshold <= total_unique_item(item)
+      lowest_threshold(item).first.item_threshold <= total_unique_item(item)
     else
       return false
     end
@@ -48,7 +48,16 @@ class Cart
   end
 
   def discount_subtotal(item, total)
-    total - (total * (item.merchant.distinct_discounts.order(:item_threshold).limit(1).first.discount_percent.to_f/100))
+    total - (total * (highest_discount(item).first.discount_percent.to_f/100))
+  end
+
+  def highest_discount(item)
+    total_item = total_unique_item(item)
+    item.merchant.distinct_discounts.where('item_threshold <= ?', total_item).order(discount_percent: :desc).limit(1)
+  end
+
+  def lowest_threshold(item)
+    item.merchant.distinct_discounts.order(:item_threshold).limit(1)
   end
 
   def total
