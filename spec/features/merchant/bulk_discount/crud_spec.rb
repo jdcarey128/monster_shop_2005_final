@@ -162,11 +162,31 @@ RSpec.describe "As a merchant employee" do
 
     describe "when I click 'Update Discount'" do
       it "with completed fields, I am returned to the merchant dashboard where I see the updated discount and a success flash message" do
-
+        percent_update = 20
+        fill_in "discount[discount_percent]", with: percent_update
+        click_button "Update Bulk Discount"
+        expect(page).to have_content("Bulk discount successfully updated")
+        within "#discount-#{@discount.id}" do
+          expect(page).to have_content("#{percent_update}% Discount")
+        end
       end
 
       it "with one or more missing fields, I still see the edit form with an error flash message" do
+        percent_update = ""
+        threshold_update = ""
 
+        fill_in "discount[discount_percent]", with: percent_update
+        click_button "Update Bulk Discount"
+        save_and_open_page
+        expect(page).to have_content("Discount percent can't be blank")
+        expect(find_field("discount[discount_percent]").value).to eq(@discount.discount_percent.to_s)
+        expect(find_field("discount[item_threshold]").value).to eq(@discount.item_threshold.to_s)
+
+        fill_in "discount[item_threshold]", with: threshold_update
+        click_button "Update Bulk Discount"
+        expect(page).to have_content("Item threshold can't be blank")
+        expect(find_field("discount[discount_percent]").value).to eq(@discount.discount_percent.to_s)
+        expect(find_field("discount[item_threshold]").value).to eq(@discount.item_threshold.to_s)
       end
     end
   end

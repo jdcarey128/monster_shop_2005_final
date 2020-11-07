@@ -17,12 +17,29 @@ class Merchant::DiscountsController < Merchant::BaseController
   end
 
   def edit
-    @discount = Discount.find_by_id(params[:id])
+    @discount = find_discount
+  end
+
+  def update
+    @discount = find_discount
+    if @discount.update(discount_params)
+      flash[:success] = "Bulk discount successfully updated"
+      redirect_to merchant_root_path
+    else
+      flash[:error] = @discount.errors.full_messages.to_sentence
+      redirect_to edit_merchant_discount_path
+    end
   end
 
   private
   def discount_params
     params.require(:discount).permit(:discount_percent, :item_threshold)
   end
+
+  def find_discount
+    Discount.find_by_id(params[:id])
+  end
+
+
 
 end
