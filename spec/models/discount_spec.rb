@@ -4,6 +4,10 @@ RSpec.describe Discount, type: :model do
   describe 'validations' do
     it {should validate_presence_of :discount_percent}
     it {should validate_presence_of :item_threshold}
+    it {should validate_numericality_of(:discount_percent).is_greater_than(0)}
+    it {should validate_numericality_of(:discount_percent).is_less_than_or_equal_to(100)}
+    it {should validate_numericality_of(:item_threshold).is_greater_than(0)}
+    it {should validate_numericality_of(:item_threshold).is_less_than_or_equal_to(100)}
   end
 
   describe 'relationships' do
