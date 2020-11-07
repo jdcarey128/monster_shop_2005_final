@@ -21,7 +21,7 @@ RSpec.describe "As a merchant employee" do
       click_button 'Login'
     end
 
-    it "I see a section with all Bulk Discounts I have created" do
+    it "I see a section with multiple Discounts that I have created" do
       within '.bulk-discounts' do
         expect(page).to have_css(".discount", count:2)
         expect(page).to have_content(@discount.discount_percent)
@@ -216,7 +216,7 @@ RSpec.describe "As a merchant employee" do
 
       expect(current_path).to eq(merchant_root_path)
       expect(page).to have_content("Discount successfully deleted")
-      
+
       within ".bulk-discounts" do
         expect(page).to_not have_css("#discount-#{@discount.id}")
         expect(page).to have_css("#discount-#{@discount_2.id}")
