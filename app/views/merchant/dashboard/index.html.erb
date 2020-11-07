@@ -1,3 +1,12 @@
 
 <%= render 'shared/merchant_dashboard' %>
 <h2 align="center"><%= link_to "My Items", merchant_items_path %></h2>
+
+<center>
+  <% if current_merchant? %>
+    <section class="bulk-discounts">
+      <h2 align="center">Bulk Discounts</h2>
+      <p><%= link_to "Create New Bulk Discount", "/merchant/discounts/new" %></p>
+    </section>
+  <% end %>
+</center>
