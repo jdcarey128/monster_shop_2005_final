@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   namespace :merchant do
     root 'dashboard#index'
     resources :items, except: [:show]
-    resources :discounts, only: [:new, :create, :edit, :update]
+    resources :discounts, except: [:index, :show]
     get '/orders/:order_id', to: "orders#show"
     patch '/orders/:order_id', to: "orders#update"
   end

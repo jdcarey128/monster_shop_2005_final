@@ -177,7 +177,7 @@ RSpec.describe "As a merchant employee" do
 
         fill_in "discount[discount_percent]", with: percent_update
         click_button "Update Bulk Discount"
-        save_and_open_page
+
         expect(page).to have_content("Discount percent can't be blank")
         expect(find_field("discount[discount_percent]").value).to eq(@discount.discount_percent.to_s)
         expect(find_field("discount[item_threshold]").value).to eq(@discount.item_threshold.to_s)
@@ -193,7 +193,34 @@ RSpec.describe "As a merchant employee" do
 
   describe "when I click a link to 'Delete Discount'" do
     it "I am redirected to the merchant dashboard, I no longer see the discount, and I see a flash success message" do
+      visit login_path
+      merchant = create(:merchant)
+      merchant_employee = create(:user, role: 1, merchant: merchant)
+      item_1 = create(:item, merchant: merchant)
+      item_2 = create(:item, merchant: merchant)
+      item_3 = create(:item, merchant: merchant)
 
+      @discount = create(:discount)
+      @discount_2 = create(:discount)
+      items = [item_1, item_2, item_3]
+      @discount.items << items
+      @discount_2.items << items
+
+      fill_in :email, with: merchant_employee.email
+      fill_in :password, with: 'password'
+      click_button 'Login'
+
+      within "#discount-#{@discount.id}" do
+        click_link "Delete Discount"
+      end
+
+      expect(current_path).to eq(merchant_root_path)
+      expect(page).to have_content("Discount successfully deleted")
+      
+      within ".bulk-discounts" do
+        expect(page).to_not have_css("#discount-#{@discount.id}")
+        expect(page).to have_css("#discount-#{@discount_2.id}")
+      end
     end
   end
 end
