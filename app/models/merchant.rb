@@ -58,7 +58,7 @@ class Merchant < ApplicationRecord
   end
 
   def distinct_discounts
-    self.discounts.distinct
+    self.discounts.distinct if self.discounts 
   end
 
 end
