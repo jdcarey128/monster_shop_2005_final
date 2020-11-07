@@ -26,7 +26,7 @@ class Cart
   end
 
   def apply_discount?(item)
-    item.merchant.distinct_discounts.order(discount_percent: :desc).limit(1).first.item_threshold == total_unique_item(item)
+    item.merchant.distinct_discounts.order(:item_threshold).limit(1).first.item_threshold == total_unique_item(item)
   end
 
 
