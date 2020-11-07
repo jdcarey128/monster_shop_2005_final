@@ -16,6 +16,10 @@ class Merchant::DiscountsController < Merchant::BaseController
     end
   end
 
+  def edit
+    @discount = Discount.find_by_id(params[:id])
+  end
+
   private
   def discount_params
     params.require(:discount).permit(:discount_percent, :item_threshold)

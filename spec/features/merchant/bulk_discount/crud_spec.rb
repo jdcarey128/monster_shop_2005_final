@@ -2,21 +2,51 @@ require 'rails_helper'
 
 RSpec.describe "As a merchant employee" do
   describe "when I log in to my account and go to the dashboard" do
+    before :each do
+      visit login_path
+      merchant = create(:merchant)
+      merchant_employee = create(:user, role: 1, merchant: merchant)
+      item_1 = create(:item, merchant: merchant)
+      item_2 = create(:item, merchant: merchant)
+      item_3 = create(:item, merchant: merchant)
+
+      @discount = create(:discount)
+      @discount_2 = create(:discount)
+      items = [item_1, item_2, item_3]
+      @discount.items << items
+      @discount_2.items << items
+
+      fill_in :email, with: merchant_employee.email
+      fill_in :password, with: 'password'
+      click_button 'Login'
+    end
 
     it "I see a section with all Bulk Discounts I have created" do
-
+      within '.bulk-discounts' do
+        expect(page).to have_css(".discount", count:2)
+        expect(page).to have_content(@discount.discount_percent)
+        expect(page).to have_content(@discount.item_threshold)
+        expect(page).to have_content(@discount_2.discount_percent)
+        expect(page).to have_content(@discount_2.item_threshold)
+      end
     end
 
     it "I see a link to create a new discount" do
-
+      within '.bulk-discounts' do
+        click_link 'Create New Bulk Discount'
+      end
     end
 
     it "Next to each discount, there is an edit button" do
-
+      within "#discount-#{@discount.id}" do
+        expect(page).to have_link("Edit Discount")
+      end
     end
 
     it "next to each discount, there is a delete button" do
-
+      within "#discount-#{@discount.id}" do
+        expect(page).to have_link("Delete Discount")
+      end
     end
   end
 
@@ -47,7 +77,6 @@ RSpec.describe "As a merchant employee" do
 
     describe "when I click 'Create Bulk Discount' within a new bulk discount form" do
       it "with all form fields completed, I am redirected to my merchant dashboard where I see the discount and a success flash message" do
-
         percent = 5
         threshold = 10
         fill_in "discount[discount_percent]", with: percent
@@ -100,10 +129,35 @@ RSpec.describe "As a merchant employee" do
     end
   end
 
-
   describe "when I click a link to 'Edit Discount'" do
-    it "I am taken to a prefilled bulk discount edit form" do
+    before :each do
+      visit login_path
+      merchant = create(:merchant)
+      merchant_employee = create(:user, role: 1, merchant: merchant)
+      item_1 = create(:item, merchant: merchant)
+      item_2 = create(:item, merchant: merchant)
+      item_3 = create(:item, merchant: merchant)
 
+      @discount = create(:discount)
+      @discount_2 = create(:discount)
+      items = [item_1, item_2, item_3]
+      @discount.items << items
+      @discount_2.items << items
+
+      fill_in :email, with: merchant_employee.email
+      fill_in :password, with: 'password'
+      click_button 'Login'
+
+      within "#discount-#{@discount.id}" do
+        click_link "Edit Discount"
+      end
+    end
+
+    it "I am taken to a prefilled bulk discount edit form" do
+      expect(current_path).to eq("/merchant/discounts/#{@discount.id}/edit")
+      expect(find_field("discount[discount_percent]").value).to eq(@discount.discount_percent.to_s)
+      expect(find_field("discount[item_threshold]").value).to eq(@discount.item_threshold.to_s)
+      expect(page).to have_button("Update Bulk Discount")
     end
 
     describe "when I click 'Update Discount'" do
