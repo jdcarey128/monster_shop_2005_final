@@ -25,6 +25,9 @@ RSpec.describe "As a merchant employee" do
       visit login_path
       merchant = create(:merchant)
       merchant_employee = create(:user, role: 1, merchant: merchant)
+      item_1 = create(:item, merchant: merchant)
+      item_2 = create(:item, merchant: merchant)
+      item_3 = create(:item, merchant: merchant)
 
       fill_in :email, with: merchant_employee.email
       fill_in :password, with: 'password'
@@ -37,7 +40,6 @@ RSpec.describe "As a merchant employee" do
 
     it "I see a form to create a new discount and item threshold" do
       expect(current_path).to eq("/merchant/discounts/new")
-      save_and_open_page
       expect(find_field("discount[discount_percent]").value).to eq(nil)
       expect(find_field("discount[item_threshold]").value).to eq(nil)
       expect(page).to have_button("Create Bulk Discount")
@@ -46,9 +48,29 @@ RSpec.describe "As a merchant employee" do
     describe "when I click 'Create Bulk Discount' within a new bulk discount form" do
       it "with all form fields completed, I am redirected to my merchant dashboard where I see the discount and a success flash message" do
 
+        percent = 5
+        threshold = 10
+        fill_in "discount[discount_percent]", with: percent
+        fill_in "discount[item_threshold]", with: threshold
+
+        click_button "Create Bulk Discount"
+
+        expect(current_path).to eq(merchant_root_path)
+        expect(page).to have_content("You have succesfully created a bulk discount")
+
+        discount = Discount.last
+
+        within "#discount-#{discount.id}" do
+          expect(page).to have_content("#{percent}% Discount")
+          expect(page).to have_content("Item threshold: #{threshold} items")
+        end
       end
 
       it "with one or more missing fields, I still see the new discount form with an error flash message" do
+
+      end
+
+      it "with incorrectly filled fields I still see the new discount form with an error flash message" do
 
       end
 
