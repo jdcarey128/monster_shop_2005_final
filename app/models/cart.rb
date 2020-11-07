@@ -25,6 +25,11 @@ class Cart
     @contents[item.id.to_s]
   end
 
+  def apply_discount?(item)
+    item.merchant.distinct_discounts.order(discount_percent: :desc).limit(1).first.item_threshold == total_unique_item(item)
+  end
+
+
   def items
     item_quantity = {}
     @contents.each do |item_id,quantity|
@@ -35,7 +40,6 @@ class Cart
 
   def subtotal(item)
     #add discount
-    require "pry"; binding.pry
     item.price * @contents[item.id.to_s]
   end
 

@@ -12,6 +12,8 @@ RSpec.describe Cart do
         @ogre.id.to_s => 1,
         @giant.id.to_s => 2
         })
+      @discount = create(:discount, discount_percent: 5, item_threshold: 5)
+      @discount.items << @megan.items
     end
 
     it '.contents' do
@@ -82,6 +84,25 @@ RSpec.describe Cart do
     it '#total_unique_item' do
       expect(@cart.total_unique_item(@giant)).to eq(2)
       expect(@cart.total_unique_item(@ogre)).to eq(1)
+
+      @cart.add_item(@giant.id.to_s)
+      expect(@cart.total_unique_item(@giant)).to eq(3)
+    end
+
+    describe '#apply_discount?' do
+      it 'should only apply discount to items that reach threshold' do
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+        expect(@cart.apply_discount?(@giant)).to eq(false)
+        expect(@cart.apply_discount?(@ogre)).to eq(false)
+        @cart.add_item(@giant.id.to_s)
+        expect(@cart.apply_discount?(@giant)).to eq(true)
+        expect(@cart.apply_discount?(@ogre)).to eq(false)
+      end
+
+      it 'should only apply discount to items of merchant with discount' do
+
+      end
     end
 
   end
