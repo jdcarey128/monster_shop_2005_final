@@ -8,5 +8,4 @@ class Discount < ApplicationRecord
     self.items << Merchant.find_by_id(merchant_id).items
   end
 
-
 end
