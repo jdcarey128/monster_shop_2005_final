@@ -88,9 +88,15 @@ RSpec.describe "As a merchant employee" do
       end
 
       it "with incorrectly filled fields I still see the new discount form with an error flash message" do
+        percent = "five"
+        threshold = "ten"
+        fill_in "discount[discount_percent]", with: percent
+        fill_in "discount[item_threshold]", with: threshold
 
+        click_button "Create Bulk Discount"
+
+        expect(page).to have_content("Discount percent is not a number and Item threshold is not a number")
       end
-
     end
   end
 
