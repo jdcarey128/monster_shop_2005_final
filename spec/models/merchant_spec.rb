@@ -297,7 +297,7 @@ describe Merchant, type: :model do
 
         discount_2.items << items
 
-        expect(merchant.distinct_discounts).to eq([discount, discount_2])
+        expect(merchant.distinct_discounts.sort).to eq([discount, discount_2].sort)
       end
 
       it "returns distinct discounts only for merchant" do
@@ -313,7 +313,7 @@ describe Merchant, type: :model do
         discount.items << items
         discount_2.items << item_3
 
-        expect(merchant.distinct_discounts).to eq([discount])
+        expect(merchant.distinct_discounts.sort).to eq([discount].sort)
         expect(merchant_2.distinct_discounts).to eq([discount_2])
       end
     end
