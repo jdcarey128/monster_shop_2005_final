@@ -29,7 +29,7 @@ class Cart
     if item.merchant.discounts != []
       item.merchant.distinct_discounts.order(:item_threshold).limit(1).first.item_threshold <= total_unique_item(item)
     else
-      return false 
+      return false
     end
   end
 
@@ -42,11 +42,17 @@ class Cart
   end
 
   def subtotal(item)
-    #add discount
-    item.price * @contents[item.id.to_s]
+    total = item.price * total_unique_item(item)
+    return discount_subtotal(item, total) if apply_discount?(item)
+    return total
+  end
+
+  def discount_subtotal(item, total)
+    total - (total * (item.merchant.distinct_discounts.order(:item_threshold).limit(1).first.discount_percent.to_f/100))
   end
 
   def total
+    #maybe refactor this to account for discount
     @contents.sum do |item_id,quantity|
       Item.find(item_id).price * quantity
     end

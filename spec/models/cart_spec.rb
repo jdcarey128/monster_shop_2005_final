@@ -124,5 +124,19 @@ RSpec.describe Cart do
       end
     end
 
+    describe "#discount_subtotal" do
+      it 'should calculate the discount for an item that reaches threshold' do
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+
+        total = @cart.total_unique_item(@giant) * @giant.price
+        percent_discount = (@discount.discount_percent/100.to_f)
+        total_discount = (total - (total * percent_discount))
+        expect(@cart.discount_subtotal(@giant, total)).to eq(total_discount)
+        expect(@cart.subtotal(@giant)).to eq(total_discount)
+      end
+    end
+
   end
 end
