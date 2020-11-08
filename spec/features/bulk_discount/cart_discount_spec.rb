@@ -170,8 +170,6 @@ RSpec.describe "As a user" do
 
       click_button "Checkout"
 
-      save_and_open_page
-
       within "#order-item-#{@item_1.id}" do
         expect(page).to have_content(item_1_price_discount)
         expect(page).to have_content(subtotal_discounted)
