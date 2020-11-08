@@ -13,6 +13,9 @@ class CartController < ApplicationController
     elsif params[:type] == 'down'
       cart.remove_one(item.id.to_s)
     end
+    if cart.apply_discount?(item)
+      session[:discounts][item] = cart.highest_discount(item)
+    end
     flash.now[:success] = "#{item.name} was successfully updated"
     redirect_to '/cart'
   end
