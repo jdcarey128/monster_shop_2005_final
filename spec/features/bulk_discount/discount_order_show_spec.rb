@@ -81,8 +81,12 @@ RSpec.describe 'As a user', type: :feature do
       end
     end
 
-    it 'I see a Grand Total that equals the sum item subtotals including discounted items' do
-      
+    it 'I see a Grand Total that is equal to discounted item subtotal' do
+      visit profile_order_show_path(@order)
+
+      within '.order-info' do
+        expect(page).to have_content(@item_order.discounted_subtotal)
+      end
     end
 
   end
