@@ -36,8 +36,11 @@
           <p><%= link_to "Remove", "/cart/#{item.id}",method: :delete %></p>
         </center>
         </td>
-      <td>
-        <p><%=number_to_currency(cart.subtotal(item))%></p>
+      <td id="subtotal-<%= item.id %>">
+        <p><%=number_to_currency(cart.subtotal(item))%></p><br>
+        <% if cart.apply_discount?(item) %>
+          <i>(with applied bulk discount)</i>
+        <% end %>
     </td>
     </tr>
   <% end %>
