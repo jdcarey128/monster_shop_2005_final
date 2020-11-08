@@ -12,7 +12,7 @@ class ItemOrder <ApplicationRecord
   end
 
   def subtotal
-    return discounted_subtotal() if discounted_price
+    return discounted_subtotal() if discount_applied?
     price * quantity
   end
 

@@ -73,7 +73,7 @@ describe ItemOrder, type: :model do
         tire = meg.items.create(name: "Gatorskins", description: "They'll never pop!", price: 100, image: "https://www.rei.com/media/4e1f5b05-27ef-4267-bb9a-14e35935f218?size=784x588", inventory: 12)
         user = create(:user)
         order_1 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, user_id: user.id)
-        item_order_1 = order_1.item_orders.create!(item: tire, price: tire.price, quantity: 2, discounted_price: 80)
+        item_order_1 = order_1.item_orders.create!(item: tire, price: tire.price, quantity: 2, discounted_price: 80, discount_applied?: true)
 
         expect(item_order_1.discounted_subtotal).to eq(160)
       end
@@ -83,7 +83,7 @@ describe ItemOrder, type: :model do
         tire = meg.items.create(name: "Gatorskins", description: "They'll never pop!", price: 100, image: "https://www.rei.com/media/4e1f5b05-27ef-4267-bb9a-14e35935f218?size=784x588", inventory: 12)
         user = create(:user)
         order_1 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, user_id: user.id)
-        item_order_1 = order_1.item_orders.create!(item: tire, price: tire.price, quantity: 2, discounted_price: 80)
+        item_order_1 = order_1.item_orders.create!(item: tire, price: tire.price, quantity: 2, discounted_price: 80, discount_applied?: true)
 
         expect(item_order_1.subtotal).to eq(160)
       end
