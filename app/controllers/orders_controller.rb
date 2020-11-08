@@ -5,7 +5,6 @@ class OrdersController <ApplicationController
   end
 
   def new
-
   end
 
   def show
