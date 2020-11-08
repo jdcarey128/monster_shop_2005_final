@@ -67,6 +67,24 @@ RSpec.describe Cart do
       expect(@cart.items).to eq({@ogre => 1, @giant => 2})
     end
 
+    describe '#discounted_items' do
+      it "it will return all discounted items in hash" do
+        expect(@cart.discounted_items).to eq({@ogre => 1, @giant => 2})
+      end
+
+      it "it will return only discounted items" do
+        @cart.add_item(@hippo.id.to_s)
+        expect(@cart.discounted_items).to eq({@ogre => 1, @giant => 2})
+      end
+    end
+
+    describe '.full_priced_items' do
+      it "it will return all full price items in hash" do
+        @cart.add_item(@hippo.id.to_s)
+        expect(@cart.full_priced_items).to eq({@hippo => 1})
+      end
+    end
+
     it '.total' do
       expect(@cart.total).to eq(120)
     end
@@ -194,7 +212,7 @@ RSpec.describe Cart do
       @cart.add_item(@giant.id.to_s)
       @cart.add_item(@giant.id.to_s)
       @cart.add_item(@giant.id.to_s)
-      
+
       @discount_2 = create(:discount, discount_percent: 10, item_threshold: 6)
       @discount_2.items << @megan.items
 

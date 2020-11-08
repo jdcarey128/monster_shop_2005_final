@@ -41,6 +41,18 @@ class Cart
     item_quantity
   end
 
+  def discounted_items
+    items.select do |item, quantity|
+      item.discounts != []
+    end
+  end
+
+  def full_priced_items
+    items.select do |item, quantity|
+      item.discounts == []
+    end
+  end
+
   def subtotal(item)
     total = item.price * total_unique_item(item)
     return discount_subtotal(item, total) if apply_discount?(item)
