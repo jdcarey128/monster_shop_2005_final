@@ -20,7 +20,7 @@ RSpec.describe 'As a user', type: :feature do
       visit profile_order_show_path(order)
 
       within "#item-#{item.id}" do
-        expect(page).to have_content(item_order.discount_price)
+        expect(page).to have_content(item_order.discounted_price)
         expect(page).to have_content(item_order.discount_subtotal)
         expect(page).to_not have_content(item_order.price)
       end
