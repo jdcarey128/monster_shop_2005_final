@@ -125,5 +125,66 @@ RSpec.describe "As a user" do
       end
     end
 
+    it 'discount will be reflected in the price coloumn' do
+      discounted_price = '$' + '%.2f' % ((@item_1.price) - (@item_1.price * 0.1))
+      within "#cart-item-#{@item_1.id}" do
+        click_button "+"
+      end
+
+      within ".price" do
+        expect(page).to have_content(discounted_price)
+      end
+    end
+
+    it 'the subtotal will reflect discounted prices' do
+      total_price = ('$' + '%.2f' % (((@item_1.price) - (@item_1.price * 0.1)) * 5))
+
+      within "#cart-item-#{@item_1.id}" do
+        click_button "+"
+      end
+
+      within ".total" do
+        expect(page).to have_content(total_price)
+      end
+    end
+
+    it 'the price, subtotal, and total prices for discounted items are correct on order new page' do
+      item_1_price_discount = ('$' + '%.2f' % ((@item_1.price) - (@item_1.price * 0.1)))
+      subtotal_discounted = ('$' + '%.2f' % (((@item_1.price) - (@item_1.price * 0.1)) * 5))
+      item_2_expected_price = ('$' + '%.2f' % (@item_2.price))
+      subtotal_regular = ('$' + '%.2f' % (@item_2.price * 2))
+      calculated_total = ('$' + '%.2f' % ((((@item_1.price) - (@item_1.price * 0.1)) * 5) + (@item_2.price * 2)))
+
+      visit item_path(@item_2)
+      click_button "Add To Cart"
+
+      visit cart_path
+
+      within "#cart-item-#{@item_1.id}" do
+        click_button "+"
+      end
+
+      within "#cart-item-#{@item_2.id}" do
+        click_button "+"
+      end
+
+      click_button "Checkout"
+
+      within "#order-item-#{@item_1.id}" do
+        expect(page).to have_content(item_1_price_discount)
+        expect(page).to have_content(subtotal_discounted)
+      end
+
+      within "#order-item-#{@item_2.id}" do
+        expect(page).to have_content(item_2_expected_price)
+        expect(page).to have_content(subtotal_regular)
+      end
+
+      within ".total" do
+        expect(page).to have_content(calculated_total)
+      end
+
+    end
+
   end
 end
