@@ -12,14 +12,29 @@
 
 <section class="items">
   <h2>Items In This Order:</h2>
-  <% @order.item_orders.each do |item_order| %>
-    <section id="item-<%= item_order.item.id %>">
+  <div class="discounted-items">
+    <% @order.discounted_item_orders.each do |item_order| %>
+    <section class="item" id="item-<%= item_order.item.id %>">
       <h3><%= item_order.item.name %></h3><br/>
       <%= image_tag(item_order.item.image) %>
       <p>Item Description: <%= item_order.item.description %><br>
-      Item Price: <%= format_price(item_order.item.price) %><br>
-      Quantity of Item in Order: <%= item_order.quantity %><br>
-      Order Subtotal: <%= format_price(item_order.subtotal) %></p>
-    </section>
-  <% end %>
+        Discounted Item Price: <%= format_price(item_order.discounted_price) %><br>
+        Quantity of Item in Order: <%= item_order.quantity %><br>
+        Order Subtotal: <%= format_price(item_order.subtotal) %></p>
+      </section><br>
+      <% end %>
+  </div>
+
+  <div class="full-price-items">
+    <% @order.full_price_item_orders.each do |item_order| %>
+    <section class="item" id="item-<%= item_order.item.id %>">
+      <h3><%= item_order.item.name %></h3><br/>
+      <%= image_tag(item_order.item.image) %>
+      <p>Item Description: <%= item_order.item.description %><br>
+        Item Price: <%= format_price(item_order.item.price) %><br>
+        Quantity of Item in Order: <%= item_order.quantity %><br>
+        Order Subtotal: <%= format_price(item_order.subtotal) %></p>
+      </section><br>
+      <% end %>
+  </div>
 </section>
