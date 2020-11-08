@@ -48,7 +48,7 @@ class Cart
   end
 
   def discount_subtotal(item, total)
-    total - (total * (highest_discount(item).first.discount_percent.to_f/100))
+    total - (total * highest_discount_percent(item))
   end
 
   def highest_discount(item)
@@ -65,9 +65,8 @@ class Cart
   end
 
   def total
-    #maybe refactor this to account for discount
     @contents.sum do |item_id,quantity|
-      Item.find(item_id).price * quantity
+      subtotal(Item.find(item_id))
     end
   end
 
