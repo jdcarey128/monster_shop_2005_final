@@ -101,7 +101,7 @@ RSpec.describe "As a user" do
       end
     end
 
-    it 'discount will not apply to other merchant items' do
+    it 'the discount will not apply to other merchant items' do
       merchant_2 = create(:merchant, :with_items, item_count: 1)
       item_4 = merchant_2.items[0]
 
@@ -122,6 +122,44 @@ RSpec.describe "As a user" do
 
       within "#cart-item-#{item_4.id}" do
         expect(page).to have_content(item_4_subtotal)
+      end
+    end
+
+    it 'the discount will be reflected in the total price' do
+      expected_discount = '$' + '%.2f' % ((@item_1_price * 5) - (@item_1_price * 5 * 0.1)).round(2)
+
+      within "#cart-item-#{@item_1.id}" do
+        click_button "+"
+      end
+
+      within ".total" do
+        expect(page).to have_content(expected_discount)
+      end
+    end
+
+    it 'the total price without an applied discount will not show discounted total' do
+      expected_price = @item_1_price * 4
+
+      within ".total" do
+        expect(page).to have_content(expected_price)
+      end
+    end
+
+    it 'the total price is calculated for both discounted and nondiscounted items' do
+      expected_discount = ((@item_1_price * 5) - (@item_1_price * 5 * 0.1)).round(2)
+      expected_price = '$' + '%.2f' % (expected_discount + @item_2.price)
+
+      within "#cart-item-#{@item_1.id}" do
+        click_button "+"
+      end
+
+      visit item_path(@item_2)
+      click_button "Add To Cart"
+
+      visit cart_path
+
+      within ".total" do
+        expect(page).to have_content(expected_price)
       end
     end
 
