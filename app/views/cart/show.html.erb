@@ -39,7 +39,7 @@
       <td id="subtotal-<%= item.id %>">
         <p><%=number_to_currency(cart.subtotal(item))%></p><br>
         <% if cart.apply_discount?(item) %>
-          <i><%= "(with #{cart.highest_discount(item).first.discount_percent} discount)" %></i>
+          <i>(with applied bulk discount)</i>
         <% end %>
     </td>
     </tr>
