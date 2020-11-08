@@ -44,7 +44,7 @@ FactoryBot.define do
   factory :item do
     sequence(:name) { |n| "Item ##{n}" }
     description { Faker::Lorem.sentence }
-    price { Faker::Commerce.price }
+    price { rand(1..200)}
     image { 'https://semantic-ui.com/images/wireframe/image.png' }
     inventory { Faker::Number.between(from: 12, to: 34) }
 
@@ -63,7 +63,7 @@ FactoryBot.define do
   factory :item_order do
     item
     order
-    price { rand(1..5000)}
+    price { item.price }
     quantity { 1 }
   end
 
