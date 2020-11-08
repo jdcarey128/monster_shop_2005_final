@@ -24,18 +24,30 @@ describe Order, type: :model do
       @pull_toy = @brian.items.create(name: "Pull Toy", description: "Great pull toy!", price: 10, image: "http://lovencaretoys.com/image/cache/dog/tug-toy-dog-pull-9010_2-800x800.jpg", inventory: 32)
       @user = create(:user)
       @order_1 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, user_id: @user.id)
+      @order_2 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, user_id: @user.id)
 
       @item_order_1 = @order_1.item_orders.create!(item: @tire, price: @tire.price, quantity: 2)
       @item_order_2 = @order_1.item_orders.create!(item: @pull_toy, price: @pull_toy.price, quantity: 3)
     end
 
-    it '#grandtotal' do
-      expect(@order_1.grandtotal).to eq(230)
+    describe '#grandtotal' do
+      it 'calculates the grandtotal without discounted items' do
+        expect(@order_1.grandtotal).to eq(230)
 
-      @chew_toy = @meg.items.create(name: "Chew Toy", description: "Great chew toy!", price: 20, image: "http://lovencaretoys.com/image/cache/dog/tug-toy-dog-pull-9010_2-800x800.jpg", inventory: 15)
-      @item_order_3 = @order_1.item_orders.create!(item: @chew_toy, price: @chew_toy.price, quantity: 4)
+        @chew_toy = @meg.items.create(name: "Chew Toy", description: "Great chew toy!", price: 20, image: "http://lovencaretoys.com/image/cache/dog/tug-toy-dog-pull-9010_2-800x800.jpg", inventory: 15)
+        @item_order_3 = @order_1.item_orders.create!(item: @chew_toy, price: @chew_toy.price, quantity: 4)
 
-      expect(@order_1.grandtotal).to eq(310)
+        expect(@order_1.grandtotal).to eq(310)
+      end
+
+      it 'calculates the grandtotal with discounted items' do
+        @item_order_1 = @order_2.item_orders.create!(item: @tire, price: @tire.price, quantity: 2, discounted_price: 80, discount_applied?: true)
+        @item_order_2 = @order_2.item_orders.create!(item: @pull_toy, price: @pull_toy.price, quantity: 3, discounted_price: 5, discount_applied?: true)
+
+        expect(@order_2.grandtotal).to eq(175)
+      end
+
+
     end
 
     it '#total_quantity' do
