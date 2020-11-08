@@ -125,5 +125,16 @@ RSpec.describe "As a user" do
       end
     end
 
+    it 'discount will be reflected in the price coloumn' do
+      discounted_price = '$' + '%.2f' % ((@item_1.price) - (@item_1.price * 0.1))
+      within "#cart-item-#{@item_1.id}" do
+        click_button "+"
+      end
+
+      within ".price" do
+        expect(page).to have_content(discounted_price)
+      end
+    end
+
   end
 end
