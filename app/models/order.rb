@@ -28,4 +28,12 @@ class Order < ApplicationRecord
   def merchant_items(merchant_id)
     items.where('merchant_id = ?', merchant_id)
   end
+
+  def discounted_item_orders
+    self.item_orders.where('item_orders.discount_applied?' => true)
+  end
+
+  def full_price_item_orders
+    self.item_orders.where('item_orders.discount_applied?' => false)
+  end
 end
