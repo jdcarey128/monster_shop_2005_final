@@ -5,9 +5,9 @@ RSpec.describe Cart do
     before :each do
       @megan = Merchant.create!(name: 'Megans Marmalades', address: '123 Main St', city: 'Denver', state: 'CO', zip: 80218)
       @brian = Merchant.create!(name: 'Brians Bagels', address: '125 Main St', city: 'Denver', state: 'CO', zip: 80218)
-      @ogre = @megan.items.create!(name: 'Ogre', description: "I'm an Ogre!", price: 20, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', inventory: 5 )
-      @giant = @megan.items.create!(name: 'Giant', description: "I'm a Giant!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', inventory: 2 )
-      @hippo = @brian.items.create!(name: 'Hippo', description: "I'm a Hippo!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', inventory: 3 )
+      @ogre = @megan.items.create!(name: 'Ogre', description: "I'm an Ogre!", price: 20, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', inventory: 10 )
+      @giant = @megan.items.create!(name: 'Giant', description: "I'm a Giant!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', inventory: 5 )
+      @hippo = @brian.items.create!(name: 'Hippo', description: "I'm a Hippo!", price: 50, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaLM_vbg2Rh-mZ-B4t-RSU9AmSfEEq_SN9xPP_qrA2I6Ftq_D9Qw', inventory: 10 )
       @cart = Cart.new({
         @ogre.id.to_s => 1,
         @giant.id.to_s => 2
@@ -194,7 +194,7 @@ RSpec.describe Cart do
       @cart.add_item(@giant.id.to_s)
       @cart.add_item(@giant.id.to_s)
       @cart.add_item(@giant.id.to_s)
-      
+
       @discount_2 = create(:discount, discount_percent: 10, item_threshold: 6)
       @discount_2.items << @megan.items
 
@@ -204,6 +204,43 @@ RSpec.describe Cart do
       @discount_3.items << @megan.items
 
       expect(@cart.highest_discount(@giant).first).to eq(@discount_3)
+    end
+
+    it '#highest_discount_percent' do
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+      @cart.add_item(@giant.id.to_s)
+
+      @discount_2 = create(:discount, discount_percent: 10, item_threshold: 6)
+      @discount_2.items << @megan.items
+
+      expect(@cart.highest_discount_percent(@giant)).to eq(0.1)
+    end
+
+    describe "#price(item)" do
+      it "returns the price of an item for nondiscounted items" do
+        expect(@cart.price(@giant)).to eq(@giant.price)
+      end
+
+      it "returns the discounted price of item with discount" do
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+        expect(@cart.price(@giant)).to eq(47.5)
+      end
+
+      it "returns the price of item with highest qualifying discount" do
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+        @cart.add_item(@giant.id.to_s)
+
+        @discount_2 = create(:discount, discount_percent: 10, item_threshold: 6)
+        @discount_2.items << @megan.items
+
+        expect(@cart.price(@giant)).to eq(45)
+      end
     end
 
   end
