@@ -43,6 +43,9 @@ RSpec.describe("Profile Order Page") do
         click_button "+"
       end
 
+    end
+
+    it "my '/profile/orders' reflects the discounted grand total" do
       click_button "Checkout"
 
       name = "Bert"
@@ -62,9 +65,7 @@ RSpec.describe("Profile Order Page") do
       @order = Order.last
 
       @discounted_grandtotal = ('$' + '%.2f' % (22.5 + 90 + 100))
-    end
 
-    it "my '/profile/orders' reflects the discounted grand total" do
       expect(current_path).to eq(profile_orders_path)
 
       within "#order-#{@order.id}" do
@@ -72,14 +73,65 @@ RSpec.describe("Profile Order Page") do
       end
     end
 
+    it "my '/profile/orders' reflects the highest discounted grand total" do
+      @discount_2 = create(:discount, discount_percent: 20, item_threshold: 5)
+      @discount_2.items << @mike.items
+
+      click_button "Checkout"
+
+      name = "Bert"
+      address = "123 Sesame St."
+      city = "NYC"
+      state = "New York"
+      zip = 10001
+
+      fill_in :name, with: name
+      fill_in :address, with: address
+      fill_in :city, with: city
+      fill_in :state, with: state
+      fill_in :zip, with: zip
+
+      click_button "Create Order"
+
+      @order = Order.last
+
+      expect(current_path).to eq(profile_orders_path)
+
+      @highest_discounted_total = ('$' + '%.2f' % (20 + 80 + 100))
+
+      within "#order-#{@order.id}" do
+        expect(page).to have_content(@highest_discounted_total)
+      end
+    end
+
     describe 'when I click the order id, I am taken to the order show page' do
+      before :each do
+        click_button "Checkout"
+
+        name = "Bert"
+        address = "123 Sesame St."
+        city = "NYC"
+        state = "New York"
+        zip = 10001
+
+        fill_in :name, with: name
+        fill_in :address, with: address
+        fill_in :city, with: city
+        fill_in :state, with: state
+        fill_in :zip, with: zip
+
+        click_button "Create Order"
+
+        @order = Order.last
+      end
+
      it 'I see the correct discounted grand total and individual item price display' do
         within "#order-#{@order.id}" do
           click_link(@order.id)
         end
 
         expect(current_path).to eq(profile_order_show_path(@order))
-        
+
         within ".order-info" do
           expect(page).to have_content(@discounted_grandtotal)
         end
