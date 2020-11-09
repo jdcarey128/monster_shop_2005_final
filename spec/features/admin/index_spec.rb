@@ -73,7 +73,7 @@ describe 'As an admin user' do
         expect(page).to have_link(@user.name)
         expect(page).to have_content(@order_2.id)
         expect(page).to have_content(@order_2.created_at)
-        expect(page).to_not have_content(@order_5.id)
+        expect(page).to_not have_content(@order_5.id, exact:true)
       end
 
       within ".shipped-orders" do
