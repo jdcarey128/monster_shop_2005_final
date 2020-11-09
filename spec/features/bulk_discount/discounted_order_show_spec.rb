@@ -105,27 +105,26 @@ RSpec.describe("Profile Order Page") do
     end
 
     describe 'when I click the order id, I am taken to the order show page' do
-      before :each do
-        click_button "Checkout"
-
-        name = "Bert"
-        address = "123 Sesame St."
-        city = "NYC"
-        state = "New York"
-        zip = 10001
-
-        fill_in :name, with: name
-        fill_in :address, with: address
-        fill_in :city, with: city
-        fill_in :state, with: state
-        fill_in :zip, with: zip
-
-        click_button "Create Order"
-
-        @order = Order.last
-      end
-
      it 'I see the correct discounted grand total and individual item price display' do
+       click_button "Checkout"
+
+       name = "Bert"
+       address = "123 Sesame St."
+       city = "NYC"
+       state = "New York"
+       zip = 10001
+
+       fill_in :name, with: name
+       fill_in :address, with: address
+       fill_in :city, with: city
+       fill_in :state, with: state
+       fill_in :zip, with: zip
+
+       click_button "Create Order"
+
+       @order = Order.last
+
+
         within "#order-#{@order.id}" do
           click_link(@order.id)
         end
@@ -152,6 +151,59 @@ RSpec.describe("Profile Order Page") do
           expect(page).to have_content("Order Subtotal: $#{@pencil_discount * 5}0")
           expect(page).to have_content("Discount Applied")
         end
+      end
+
+      it 'I see the highest discounted grand total and individual item price display' do
+         @discount_2 = create(:discount, discount_percent: 20, item_threshold: 5)
+         @discount_2.items << @mike.items
+         @highest_discounted_total = ('$' + '%.2f' % (20 + 80 + 100))
+         @paper_higher_discount = @paper.price - (@paper.price * @discount_2.discount_percent/100.to_f)
+         @pencil_higher_discount = @pencil.price - (@pencil.price * @discount_2.discount_percent/100.to_f)
+
+         click_button "Checkout"
+
+         name = "Bert"
+         address = "123 Sesame St."
+         city = "NYC"
+         state = "New York"
+         zip = 10001
+
+         fill_in :name, with: name
+         fill_in :address, with: address
+         fill_in :city, with: city
+         fill_in :state, with: state
+         fill_in :zip, with: zip
+
+         click_button "Create Order"
+         
+         @order = Order.last
+
+         within "#order-#{@order.id}" do
+           click_link(@order.id)
+         end
+
+         expect(current_path).to eq(profile_order_show_path(@order))
+
+         within ".order-info" do
+           expect(page).to have_content(@highest_discounted_total)
+         end
+
+         within "#item-#{@tire.id}" do
+           expect(page).to have_content("Item Price: $#{@tire.price}.00")
+           expect(page).to have_content("Order Subtotal: $#{@tire.price}.00")
+         end
+
+         within "#item-#{@paper.id}" do
+           expect(page).to have_content("Item Price: $#{@paper_higher_discount}0")
+           expect(page).to have_content("Order Subtotal: $#{@paper_higher_discount * 5}0")
+           expect(page).to have_content("Discount Applied")
+         end
+
+         within "#item-#{@pencil.id}" do
+           expect(page).to have_content("Item Price: $#{@pencil_higher_discount}0")
+           expect(page).to have_content("Order Subtotal: $#{@pencil_higher_discount * 5}0")
+           expect(page).to have_content("Discount Applied")
+         end
       end
     end
 
