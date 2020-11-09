@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe("Profile Order Page") do
-  describe "When I check out from my cart" do
+  describe "When I check out from my cart and create an order" do
     before(:each) do
       @user = create(:user)
       @mike = Merchant.create(name: "Mike's Print Shop", address: '123 Paper Rd.', city: 'Denver', state: 'CO', zip: 80203)
@@ -11,6 +11,9 @@ RSpec.describe("Profile Order Page") do
       @pencil = @mike.items.create(name: "Yellow Pencil", description: "You can write on paper with it!", price: 5, image: "https://images-na.ssl-images-amazon.com/images/I/31BlVr01izL._SX425_.jpg", inventory: 100)
       @discount = create(:discount, discount_percent: 10, item_threshold: 5)
       @discount.items << @mike.items
+
+      @paper_discount = @paper.price - (@paper.price * @discount.discount_percent/100.to_f)
+      @pencil_discount = @pencil.price - (@pencil.price * @discount.discount_percent/100.to_f)
 
       visit login_path
       fill_in :email, with: @user.email
@@ -57,20 +60,48 @@ RSpec.describe("Profile Order Page") do
       click_button "Create Order"
 
       @order = Order.last
+
+      @discounted_grandtotal = ('$' + '%.2f' % (22.5 + 90 + 100))
     end
 
-    it "when I create an order, my '/profile/orders' reflects the discounted grand total" do
+    it "my '/profile/orders' reflects the discounted grand total" do
       expect(current_path).to eq(profile_orders_path)
 
-      discounted_grandtotal = ('$' + '%.2f' % (22.5 + 90 + 100))
-
       within "#order-#{@order.id}" do
-        expect(page).to have_content(discounted_grandtotal)
+        expect(page).to have_content(@discounted_grandtotal)
       end
     end
 
+    describe 'when I click the order id, I am taken to the order show page' do
+     it 'I see the correct discounted grand total and individual item price display' do
+        within "#order-#{@order.id}" do
+          click_link(@order.id)
+        end
 
+        expect(current_path).to eq(profile_order_show_path(@order))
+        
+        within ".order-info" do
+          expect(page).to have_content(@discounted_grandtotal)
+        end
 
+        within "#item-#{@tire.id}" do
+          expect(page).to have_content("Item Price: $#{@tire.price}.00")
+          expect(page).to have_content("Order Subtotal: $#{@tire.price}.00")
+        end
+
+        within "#item-#{@paper.id}" do
+          expect(page).to have_content("Item Price: $#{@paper_discount}0")
+          expect(page).to have_content("Order Subtotal: $#{@paper_discount * 5}0")
+          expect(page).to have_content("Discount Applied")
+        end
+
+        within "#item-#{@pencil.id}" do
+          expect(page).to have_content("Item Price: $#{@pencil_discount}0")
+          expect(page).to have_content("Order Subtotal: $#{@pencil_discount * 5}0")
+          expect(page).to have_content("Discount Applied")
+        end
+      end
+    end
 
   end
 end
