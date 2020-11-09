@@ -60,7 +60,6 @@ RSpec.describe("Profile Order Page") do
     end
 
     it "when I create an order, my '/profile/orders' reflects the discounted grand total" do
-      save_and_open_page
       expect(current_path).to eq(profile_orders_path)
 
       discounted_grandtotal = ('$' + '%.2f' % (22.5 + 90 + 100))
