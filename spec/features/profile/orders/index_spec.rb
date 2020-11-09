@@ -26,14 +26,14 @@ describe 'as a default user' do
         expect(page).to have_link("#{@order_1.id}")
         expect(page).to have_content(@order_1.status)
         expect(page).to have_content(@order_1.total_quantity)
-        expect(page).to have_content("$2100.00")
+        expect(page).to have_content("$2,100.00")
       end
 
       within "#order-#{@order_2.id}" do
         expect(page).to have_link("#{@order_2.id}")
         expect(page).to have_content(@order_2.status)
         expect(page).to have_content(@order_2.total_quantity)
-        expect(page).to have_content("$10000.00")
+        expect(page).to have_content("$10,000.00")
       end
     end
   end

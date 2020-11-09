@@ -19,7 +19,7 @@
       <li><b>Order: <%= link_to order.id, "/merchant/orders/#{order.id}" %></b><br />
       Date of order: <%= format_date(order.created_at) %><br />
       Order quantity: <%= @merchant.order_item_quantity(order) %><br />
-      Order total: <%= format_price(@merchant.order_total(order)) %></li>
+      Order total: <%= number_to_currency(@merchant.order_total(order)) %></li>
     </div>
   <% end %>
   </ul>

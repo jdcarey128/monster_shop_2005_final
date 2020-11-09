@@ -4,7 +4,7 @@
   Order Updated On: <%= format_date(@order.updated_at) %><br>
   Order Status: <%= @order.status_check %><br>
   Total Quantity of Items: <%= @order.total_quantity %><br>
-  Grand Total: <%= format_price(@order.grandtotal) %></p>
+  Grand Total: <%= number_to_currency(@order.grandtotal) %></p>
   <% unless @order.status == "shipped" %>
     <%= button_to "Cancel Order", "/profile/orders/#{@order.id}", method: :patch %>
   <% end %>
@@ -17,12 +17,12 @@
       <h3><%= item_order.item.name %></h3><br/>
       <%= image_tag(item_order.item.image) %>
       <p>Item Description: <%= item_order.item.description %><br>
-      Item Price: <%= format_price(item_order.price) %>
+      Item Price: <%= number_to_currency(item_order.price) %>
       <% if item_order.applied_discount? %>
         <i> (Discount Applied)</i>
       <% end %><br>
       Quantity of Item in Order: <%= item_order.quantity %><br>
-      Order Subtotal: <%= format_price(item_order.subtotal) %></p>
+      Order Subtotal: <%= number_to_currency(item_order.subtotal) %></p>
     </section>
   <% end %>
 </section>

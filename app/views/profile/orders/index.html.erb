@@ -7,7 +7,7 @@
       Order Updated On: <%= format_date(order.updated_at) %><br>
       Order Status: <%= order.status %><br>
       Total Quantity of Items: <%= order.total_quantity %><br>
-      Grand Total: <%= format_price(order.grandtotal) %></p>
+      Grand Total: <%= number_to_currency(order.grandtotal) %></p>
     </section>
   <% end %>
 </section>
