@@ -37,6 +37,8 @@ ActiveRecord::Schema.define(version: 2020_11_09_203500) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "fulfill_status", default: "unfulfilled"
+    t.float "discounted_price"
+    t.boolean "discount_applied?", default: false
     t.boolean "applied_discount?", default: true
     t.index ["item_id"], name: "index_item_orders_on_item_id"
     t.index ["order_id"], name: "index_item_orders_on_order_id"
