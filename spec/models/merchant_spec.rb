@@ -228,21 +228,19 @@ describe Merchant, type: :model do
         order_1 = create(:order)
         order_2 = create(:order)
 
-        item_order_1 = create(:item_order, order: order_1, item: merchant.items[0])
+        item_order_1 = create(:item_order, order: order_1, item: merchant.items[0], quantity: 3)
         item_order_2 = create(:item_order, order: order_1, item: merchant.items[1])
-        item_order_3 = create(:item_order, order: order_1, item: merchant_2.items[0])
-        item_order_4 = create(:item_order, order: order_1, item: merchant_2.items[1])
-        item_order_5 = create(:item_order, order: order_1, item: merchant_2.items[2])
+        item_order_3 = create(:item_order, order: order_1, item: merchant_2.items[0], quantity: 3)
 
-        item_order_7 = create(:item_order, order: order_2, item: merchant.items[1])
-        item_order_8 = create(:item_order, order: order_2, item: merchant_2.items[1])
-        item_order_9 = create(:item_order, order: order_2, item: merchant_2.items[2])
+        item_order_4 = create(:item_order, order: order_2, item: merchant.items[1], quantity: 2)
+        item_order_5 = create(:item_order, order: order_2, item: merchant_2.items[1], quantity: 2)
+        item_order_6 = create(:item_order, order: order_2, item: merchant_2.items[2], quantity: 4)
 
-        expect(merchant.order_item_quantity(order_1)).to eq(2)
-        expect(merchant.order_item_quantity(order_2)).to eq(1)
+        expect(merchant.order_item_quantity(order_1)).to eq(4)
+        expect(merchant.order_item_quantity(order_2)).to eq(2)
 
         expect(merchant_2.order_item_quantity(order_1)).to eq(3)
-        expect(merchant_2.order_item_quantity(order_2)).to eq(2)
+        expect(merchant_2.order_item_quantity(order_2)).to eq(6)
       end
     end
 
