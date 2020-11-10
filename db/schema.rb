@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_09_203500) do
+ActiveRecord::Schema.define(version: 2020_11_10_022206) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,9 +37,7 @@ ActiveRecord::Schema.define(version: 2020_11_09_203500) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "fulfill_status", default: "unfulfilled"
-    t.float "discounted_price"
     t.boolean "discount_applied?", default: false
-    t.boolean "applied_discount?", default: true
     t.index ["item_id"], name: "index_item_orders_on_item_id"
     t.index ["order_id"], name: "index_item_orders_on_order_id"
   end
