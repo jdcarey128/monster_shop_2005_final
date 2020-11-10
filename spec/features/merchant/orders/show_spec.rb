@@ -21,15 +21,15 @@ describe 'as a merchant employee' do
       @order = create(:order, user: @user)
       @order_2 = create(:order, user: @user)
 
-      @io1 = create(:item_order, order: @order, item: @m1_item1, quantity: 2)
-      @io2 = create(:item_order, order: @order, item: @m1_item2, quantity: 35)
-      @io3 = create(:item_order, order: @order, item: @m1_item3)
-      @io4 = create(:item_order, order: @order, item: @m2_item1, quantity: 4)
-      @io5 = create(:item_order, order: @order, item: @m2_item2)
+      @io1 = create(:item_order, order: @order, order_price: @m1_item1.price, item: @m1_item1, quantity: 2)
+      @io2 = create(:item_order, order: @order, order_price: @m1_item2.price, item: @m1_item2, quantity: 35)
+      @io3 = create(:item_order, order: @order, order_price: @m1_item3.price, item: @m1_item3)
+      @io4 = create(:item_order, order: @order, order_price: @m2_item1.price, item: @m2_item1, quantity: 4)
+      @io5 = create(:item_order, order: @order, order_price: @m2_item2.price, item: @m2_item2)
 
-      @io6 = create(:item_order, order: @order_2, item: @m2_item1, quantity: 2)
-      @io7 = create(:item_order, order: @order_2, item: @m2_item2)
-      @io8 = create(:item_order, order: @order_2, item: @m2_item3, quantity: 5)
+      @io6 = create(:item_order, order: @order_2, order_price: @m1_item1.price, item: @m1_item1, quantity: 2)
+      @io7 = create(:item_order, order: @order_2, order_price: @m2_item2.price, item: @m2_item2)
+      @io8 = create(:item_order, order: @order_2, order_price: @m2_item3.price, item: @m2_item3, quantity: 5)
 
       visit login_path
       fill_in :email, with: @merchant_employee.email
@@ -68,7 +68,7 @@ describe 'as a merchant employee' do
         expect(page).to have_content(@m1_item1.name)
         expect(page).to have_xpath("//img[contains(@src,'#{@m1_item1.image}')]")
         expect(page).to have_content(@m1_item1.price)
-        expect(page).to have_content(@m1_item1.quantity_ordered(@m1_item1.id))
+        expect(page).to have_content(2)
       end
     end
 

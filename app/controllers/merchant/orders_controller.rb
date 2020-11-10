@@ -2,7 +2,7 @@ class Merchant::OrdersController < Merchant::BaseController
 
   def show
     @order = Order.find(params[:order_id])
-    @merchant = current_user
+    @merchant = current_user.merchant
   end
 
   def update
