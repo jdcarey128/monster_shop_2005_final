@@ -1,8 +1,9 @@
 class Merchant::OrdersController < Merchant::BaseController
 
   def show
+    require "pry"; binding.pry
     @order = Order.find(params[:order_id])
-    @merchant_id = User.find(session[:user_id]).merchant_id
+    @merchant = current_user
   end
 
   def update
