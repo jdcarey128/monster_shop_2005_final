@@ -18,7 +18,7 @@
       <%= image_tag(item_order.item.image) %>
       <p>Item Description: <%= item_order.item.description %><br>
       Item Price: <%= number_to_currency(item_order.price) %>
-      <% if item_order.applied_discount? %>
+      <% if item_order.discount_applied? %>
         <i> (Discount Applied)</i>
       <% end %><br>
       Quantity of Item in Order: <%= item_order.quantity %><br>
