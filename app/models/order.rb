@@ -26,6 +26,6 @@ class Order < ApplicationRecord
   end
 
   def merchant_items(merchant)
-    items.where('merchant_id = ?', merchant).joins(:item_orders).select('items.*, item_orders.*')
+    items.where('merchant_id = ?', merchant)
   end
 end
