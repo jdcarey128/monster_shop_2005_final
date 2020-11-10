@@ -40,7 +40,7 @@ RSpec.describe 'As an admin', type: :feature do
       review_1 = chain.reviews.create(title: "Great place!", content: "They have great bike stuff and I'd recommend them to anyone.", rating: 5)
       user = create(:user)
       order_1 = Order.create!(name: 'Meg', address: '123 Stang St', city: 'Hershey', state: 'PA', zip: 80218, user_id: user.id)
-      order_1.item_orders.create!(item: chain, price: chain.price, quantity: 2)
+      order_1.item_orders.create!(item: chain, order_price: chain.price, quantity: 2)
 
       visit "/items/#{chain.id}"
 

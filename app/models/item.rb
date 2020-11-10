@@ -46,10 +46,21 @@ class Item < ApplicationRecord
   end
 
   def fulfilled?(order_id)
+    # self.fulfill_status == 'fulfilled'
     item_orders.where(order_id: order_id).first.fulfill_status == 'fulfilled'
   end
 
   def insufficient_inventory?(order_id)
+    # self.quantity > self.inventory
     item_orders.where(order_id: order_id).first.quantity > self.inventory
   end
+
+  def item_order_price(order)
+    self.item_orders.find_by('order_id = ?', order).order_price
+  end
+
+  def item_order_quantity(order)
+    self.item_orders.find_by('order_id = ?', order).quantity
+  end
+
 end

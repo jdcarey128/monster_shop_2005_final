@@ -4,7 +4,7 @@ describe ItemOrder, type: :model do
   describe "validations" do
     it { should validate_presence_of :order_id }
     it { should validate_presence_of :item_id }
-    it { should validate_presence_of :price }
+    it { should validate_presence_of :order_price }
     it { should validate_presence_of :quantity }
   end
 
@@ -50,7 +50,7 @@ describe ItemOrder, type: :model do
         tire = meg.items.create(name: "Gatorskins", description: "They'll never pop!", price: 100, image: "https://www.rei.com/media/4e1f5b05-27ef-4267-bb9a-14e35935f218?size=784x588", inventory: 12)
         user = create(:user)
         order_1 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, user_id: user.id)
-        item_order_1 = order_1.item_orders.create!(item: tire, price: tire.price, quantity: 2)
+        item_order_1 = order_1.item_orders.create!(item: tire, order_price: tire.price, quantity: 2)
 
         expect(item_order_1.subtotal).to eq(200)
       end
@@ -60,8 +60,8 @@ describe ItemOrder, type: :model do
         tire = meg.items.create(name: "Gatorskins", description: "They'll never pop!", price: 100, image: "https://www.rei.com/media/4e1f5b05-27ef-4267-bb9a-14e35935f218?size=784x588", inventory: 12)
         user = create(:user)
         order_1 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, user_id: user.id)
-        item_order_1 = order_1.item_orders.create!(item: tire, price: tire.price, quantity: 2)
-        item_order_2 = order_1.item_orders.create!(item: tire, price: tire.price, quantity: 1)
+        item_order_1 = order_1.item_orders.create!(item: tire, order_price: tire.price, quantity: 2)
+        item_order_2 = order_1.item_orders.create!(item: tire, order_price: tire.price, quantity: 1)
 
         expect(item_order_2.subtotal).to eq(100)
       end

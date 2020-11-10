@@ -7,7 +7,7 @@ class Order < ApplicationRecord
   enum status:  %w(pending packaged shipped cancelled)
 
   def grandtotal
-    item_orders.sum('price * quantity')
+    item_orders.sum('order_price * quantity')
   end
 
   def total_quantity
@@ -25,7 +25,7 @@ class Order < ApplicationRecord
     item_orders.fulfilled.count == item_orders.count
   end
 
-  def merchant_items(merchant_id)
-    items.where('merchant_id = ?', merchant_id)
+  def merchant_items(merchant)
+    items.where('merchant_id = ?', merchant)
   end
 end

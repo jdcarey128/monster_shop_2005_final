@@ -14,9 +14,9 @@ describe 'as a registered user' do
     @order_1 = Order.create!(name: 'Shaunda', address: '123 Superduper Lane', city: 'Cooltown', state: 'CO', zip: 80247, user_id: @user.id)
     @order_2 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, user_id: @user.id)
 
-    @item_order_1 = ItemOrder.create!(item: @gelatinous_cube, price: @gelatinous_cube.price, quantity: 1, order_id: @order_1.id, item_id: @gelatinous_cube.id)
-    @item_order_2 = ItemOrder.create!(item: @owlbear, price: @owlbear.price, quantity: 2, order_id: @order_1.id, item_id: @owlbear.id)
-    @item_order_3 = ItemOrder.create!(item: @beholder, price: @beholder.price, quantity: 1, order_id: @order_2.id, item_id: @beholder.id)
+    @item_order_1 = ItemOrder.create!(item: @gelatinous_cube, order_price: @gelatinous_cube.price, quantity: 1, order_id: @order_1.id, item_id: @gelatinous_cube.id)
+    @item_order_2 = ItemOrder.create!(item: @owlbear, order_price: @owlbear.price, quantity: 2, order_id: @order_1.id, item_id: @owlbear.id)
+    @item_order_3 = ItemOrder.create!(item: @beholder, order_price: @beholder.price, quantity: 1, order_id: @order_2.id, item_id: @beholder.id)
 
     visit login_path
     fill_in :email, with: @user.email

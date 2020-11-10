@@ -35,7 +35,7 @@ RSpec.describe 'As a merchant', type: :feature do
 
     it 'I can not delete items with orders' do
       order_1 = Order.create!(name: 'Meg', address: '123 Stang St', city: 'Hershey', state: 'PA', zip: 80218, user_id: @user.id)
-      order_1.item_orders.create!(item: @chain, price: @chain.price, quantity: 2)
+      order_1.item_orders.create!(item: @chain, order_price: @chain.price, quantity: 2)
 
       visit "/items/#{@chain.id}"
 

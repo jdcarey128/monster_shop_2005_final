@@ -4,10 +4,6 @@ module ApplicationHelper
     input.strftime("%m/%d/%Y")
   end
 
-  def format_price(input)
-    '$' + '%.2f' % input.round(2)
-  end
-
   def format_percent(percent)
     "#{percent}% Discount"
   end

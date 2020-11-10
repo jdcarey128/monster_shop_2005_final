@@ -63,7 +63,7 @@ FactoryBot.define do
   factory :item_order do
     item
     order
-    price { item.price }
+    order_price { item.price }
     quantity { 1 }
   end
 

@@ -19,12 +19,12 @@ describe 'As an admin user' do
       @order_4 = Order.create!(name: 'Shaunda', address: '123 Superduper Lane', city: 'Cooltown', state: 'CO', zip: 80247, user_id: @user.id, status: "shipped")
       @order_5 = Order.create!(name: 'Shaunda', address: '123 Superduper Lane', city: 'Cooltown', state: 'CO', zip: 80247, user_id: @user.id, status: "cancelled")
 
-      @item_order_1 = ItemOrder.create!(item: @gelatinous_cube, price: @gelatinous_cube.price, quantity: 1, order_id: @order_1.id, item_id: @gelatinous_cube.id)
-      @item_order_2 = ItemOrder.create!(item: @owlbear, price: @owlbear.price, quantity: 2, order_id: @order_1.id, item_id: @owlbear.id)
-      @item_order_3 = ItemOrder.create!(item: @beholder, price: @beholder.price, quantity: 1, order_id: @order_2.id, item_id: @beholder.id)
-      @item_order_4 = ItemOrder.create!(item: @gelatinous_cube, price: @gelatinous_cube.price, quantity: 3, order_id: @order_3.id, item_id: @gelatinous_cube.id)
-      @item_order_5 = ItemOrder.create!(item: @gelatinous_cube, price: @gelatinous_cube.price, quantity: 1, order_id: @order_4.id, item_id: @gelatinous_cube.id)
-      @item_order_6 = ItemOrder.create!(item: @owlbear, price: @owlbear.price, quantity: 5, order_id: @order_5.id, item_id: @owlbear.id)
+      @item_order_1 = ItemOrder.create!(item: @gelatinous_cube, order_price: @gelatinous_cube.price, quantity: 1, order_id: @order_1.id, item_id: @gelatinous_cube.id)
+      @item_order_2 = ItemOrder.create!(item: @owlbear, order_price: @owlbear.price, quantity: 2, order_id: @order_1.id, item_id: @owlbear.id)
+      @item_order_3 = ItemOrder.create!(item: @beholder, order_price: @beholder.price, quantity: 1, order_id: @order_2.id, item_id: @beholder.id)
+      @item_order_4 = ItemOrder.create!(item: @gelatinous_cube, order_price: @gelatinous_cube.price, quantity: 3, order_id: @order_3.id, item_id: @gelatinous_cube.id)
+      @item_order_5 = ItemOrder.create!(item: @gelatinous_cube, order_price: @gelatinous_cube.price, quantity: 1, order_id: @order_4.id, item_id: @gelatinous_cube.id)
+      @item_order_6 = ItemOrder.create!(item: @owlbear, order_price: @owlbear.price, quantity: 5, order_id: @order_5.id, item_id: @owlbear.id)
 
       visit login_path
       fill_in :email, with: @admin.email

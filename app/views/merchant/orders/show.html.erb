@@ -9,12 +9,12 @@
 
 <section class="order-items">
   <h2>All Item Details</h2>
-  <% @order.merchant_items(@merchant_id).each do |item| %>
+  <% @order.merchant_items(@merchant).each do |item| %>
     <section id="item-<%= item.id %>">
       <h4><%= link_to "#{item.name}", "/items/#{item.id}" %></h4>
       <p><%= image_tag(item.image) %><br>
-      Price per Item: <%= format_price(item.price) %><br>
-      Quantity Ordered: <%= item.quantity_ordered(item.id) %></p>
+      Price per Item: <%= number_to_currency(item.item_order_price(@order)) %><br>
+      Quantity Ordered: <%= item.item_order_quantity(@order) %></p>
       <% if item.fulfilled?(@order.id) %>
         <%= "Item already fulfilled." %>
       <% elsif item.insufficient_inventory?(@order.id) %>

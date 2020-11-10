@@ -50,15 +50,15 @@ class Merchant < ApplicationRecord
   end
 
   def order_item_quantity(order)
-    self.items.joins(:item_orders).where('item_orders.order_id = ?', order).count
+    self.items.joins(:item_orders).where('item_orders.order_id = ?', order).sum('item_orders.quantity')
   end
 
   def order_total(order)
-    self.items.joins(:item_orders).where('item_orders.order_id = ?', order).sum('item_orders.price')
+    self.items.joins(:item_orders).where('item_orders.order_id = ?', order).sum('item_orders.order_price * item_orders.quantity')
   end
 
   def distinct_discounts
-    self.discounts.distinct if self.discounts 
+    self.discounts.distinct if self.discounts
   end
 
 end
