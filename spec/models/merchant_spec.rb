@@ -259,19 +259,16 @@ describe Merchant, type: :model do
         order_1 = create(:order)
         order_2 = create(:order)
 
-        item_order_1 = create(:item_order, order: order_1, item: merchant.items[0])
+        item_order_1 = create(:item_order, order: order_1, item: merchant.items[0], quantity: 3)
         item_order_2 = create(:item_order, order: order_1, item: merchant.items[1])
-        item_order_3 = create(:item_order, order: order_1, item: merchant_2.items[0])
-        item_order_4 = create(:item_order, order: order_1, item: merchant_2.items[1])
-        item_order_5 = create(:item_order, order: order_1, item: merchant_2.items[2])
+        item_order_3 = create(:item_order, order: order_1, item: merchant_2.items[0], quantity: 3)
 
-        item_order_7 = create(:item_order, order: order_2, item: merchant.items[1])
-        item_order_8 = create(:item_order, order: order_2, item: merchant_2.items[1])
-        item_order_9 = create(:item_order, order: order_2, item: merchant_2.items[2])
+        item_order_4 = create(:item_order, order: order_2, item: merchant.items[1], quantity: 2)
+        item_order_5 = create(:item_order, order: order_2, item: merchant_2.items[1], quantity: 2)
+        item_order_6 = create(:item_order, order: order_2, item: merchant_2.items[2], quantity: 4)
 
-        sum_1 = item_order_1.price + item_order_2.price
-        sum_2 = item_order_3.price + item_order_4.price + item_order_5.price
-        sum_3 = sum_1 + sum_2
+        sum_1 = (item_order_1.price * item_order_1.quantity) + (item_order_2.price * item_order_2.quantity)
+        sum_2 = item_order_3.price * item_order_3.quantity
 
         expect(merchant.order_total(order_1)).to eq(sum_1)
         expect(merchant_2.order_total(order_1)).to eq(sum_2)
