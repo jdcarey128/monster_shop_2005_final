@@ -102,7 +102,7 @@ RSpec.describe "Merchant Items Index Page" do
       ItemOrder.create!(
         order_id: order.id,
         item_id: @tire.id,
-        price: @tire.price,
+        order_price: @tire.price,
         quantity: 1
       )
 
