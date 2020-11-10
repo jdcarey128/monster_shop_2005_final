@@ -242,6 +242,7 @@ describe Merchant, type: :model do
         expect(merchant_2.order_item_quantity(order_1)).to eq(3)
         expect(merchant_2.order_item_quantity(order_2)).to eq(6)
       end
+
     end
 
     describe "#order_total" do
