@@ -268,8 +268,8 @@ describe Merchant, type: :model do
         item_order_5 = create(:item_order, order: order_2, item: merchant_2.items[1], quantity: 2)
         item_order_6 = create(:item_order, order: order_2, item: merchant_2.items[2], quantity: 4)
 
-        sum_1 = (item_order_1.price * item_order_1.quantity) + (item_order_2.price * item_order_2.quantity)
-        sum_2 = item_order_3.price * item_order_3.quantity
+        sum_1 = (item_order_1.order_price * item_order_1.quantity) + (item_order_2.order_price * item_order_2.quantity)
+        sum_2 = item_order_3.order_price * item_order_3.quantity
 
         expect(merchant.order_total(order_1)).to eq(sum_1)
         expect(merchant_2.order_total(order_1)).to eq(sum_2)
