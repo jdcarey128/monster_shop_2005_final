@@ -25,6 +25,7 @@ dog_shop = Merchant.create(name: "Brian's Dog Shop", address: '125 Doggo St.', c
 bagel_and_deli = Merchant.create(name: "Bagel and Deli", address: '125 High st.', city: 'Oxford', state: 'OH', zip: 45506)
 
 user_4 = User.create!(name: "Molly Merchant", street_address: "123 downer's grove", city: "Aurora", state: "CO", zip: 80017, email: "merchant@example.com", password: "merchant", password_confirmation: "merchant", role: 1, merchant_id: bike_shop.id)
+user_5 = User.create!(name: "Wally Merchant", street_address: "123 downer's grove", city: "Aurora", state: "CO", zip: 80017, email: "merchant_2@example.com", password: "merchant", password_confirmation: "merchant", role: 1, merchant_id: dog_shop.id)
 
 #bike_shop items
 tire = bike_shop.items.create(name: "Gatorskins", description: "They'll never pop!", price: 100, image: "https://www.rei.com/media/4e1f5b05-27ef-4267-bb9a-14e35935f218?size=784x588", inventory: 12)
@@ -40,9 +41,8 @@ frisbee = dog_shop.items.create(name: "Frisbee", description: "You can't beat th
 tennis_balls = dog_shop.items.create(name: "Tennis Balls", description: "Dogs love tennis balls!", price: 4, image: "https://www.tennisexpress.com/prodimages/45486-DEFAULT-l.jpg", inventory: 24)
 rope_ball = dog_shop.items.create(name: "Rope Ball", description: "Long lasting!", price: 6, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTwfiN0gFv8L9fNBhqq-gJck51PZqIlTOifLw&usqp=CAU", inventory: 12)
 
-#bagel_and_deli items
-bagel = bagel_and_deli.items.create(name: "Kosher Bagels", description: "Boiled and dense", price: 10, image: "https://www.tennisexpress.com/prodimages/45486-DEFAULT-l.jpg", inventory: 30)
-steamer = bagel_and_deli.items.create(name: "Sandwich Steamer", description: "Can fit 3 bagel sandwiches", price: 1000, image: "https://www.tennisexpress.com/prodimages/45486-DEFAULT-l.jpg", inventory: 10)
+bagel = bagel_and_deli.items.create(name: "Kosher Bagels", description: "4 pack. Boiled and dense", price: 10, image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ113sdgcNDfBpsYdXWDIrtWgVQIy4CsoiZag&amp;usqp=CAU", inventory: 30)
+steamer = bagel_and_deli.items.create(name: "Sandwich Steamer", description: "Can fit 3 bagel sandwiches", price: 1000, image: "https://cdnimg.webstaurantstore.com/images/products/extra_large/457748/1862845.jpg", inventory: 10)
 
 #orders
 order_1 = Order.create!(name: user_1.name, address: user_1.street_address, city: user_1.city, state: user_1.state, zip: user_1.zip, status: 2, user_id: user_1.id)
