@@ -25,15 +25,15 @@ describe Order, type: :model do
       @user = create(:user)
       @order_1 = Order.create!(name: 'Meg', address: '123 Stang Ave', city: 'Hershey', state: 'PA', zip: 17033, user_id: @user.id)
 
-      @item_order_1 = @order_1.item_orders.create!(item: @tire, price: @tire.price, quantity: 2)
-      @item_order_2 = @order_1.item_orders.create!(item: @pull_toy, price: @pull_toy.price, quantity: 3)
+      @item_order_1 = @order_1.item_orders.create!(item: @tire, order_price: @tire.price, quantity: 2)
+      @item_order_2 = @order_1.item_orders.create!(item: @pull_toy, order_price: @pull_toy.price, quantity: 3)
     end
 
     it '#grandtotal' do
       expect(@order_1.grandtotal).to eq(230)
 
       @chew_toy = @meg.items.create(name: "Chew Toy", description: "Great chew toy!", price: 20, image: "http://lovencaretoys.com/image/cache/dog/tug-toy-dog-pull-9010_2-800x800.jpg", inventory: 15)
-      @item_order_3 = @order_1.item_orders.create!(item: @chew_toy, price: @chew_toy.price, quantity: 4)
+      @item_order_3 = @order_1.item_orders.create!(item: @chew_toy, order_price: @chew_toy.price, quantity: 4)
 
       expect(@order_1.grandtotal).to eq(310)
     end
@@ -42,7 +42,7 @@ describe Order, type: :model do
       expect(@order_1.total_quantity).to eq(5)
 
       @chew_toy = @meg.items.create(name: "Chew Toy", description: "Great chew toy!", price: 20, image: "http://lovencaretoys.com/image/cache/dog/tug-toy-dog-pull-9010_2-800x800.jpg", inventory: 15)
-      @item_order_3 = @order_1.item_orders.create!(item: @chew_toy, price: @chew_toy.price, quantity: 4)
+      @item_order_3 = @order_1.item_orders.create!(item: @chew_toy, order_price: @chew_toy.price, quantity: 4)
 
       expect(@order_1.total_quantity).to eq(9)
     end
@@ -89,18 +89,32 @@ describe Order, type: :model do
     describe "#merchant_items" do
       it "returns only an item belonging to the merchant" do
         @chew_toy = @meg.items.create(name: "Chew Toy", description: "Great chew toy!", price: 20, image: "http://lovencaretoys.com/image/cache/dog/tug-toy-dog-pull-9010_2-800x800.jpg", inventory: 15)
-        @item_order_3 = @order_1.item_orders.create!(item: @chew_toy, price: @chew_toy.price, quantity: 4)
+        @item_order_3 = @order_1.item_orders.create!(item: @chew_toy, order_price: @chew_toy.price, quantity: 4)
 
-        expect(@order_1.merchant_items(@meg.id)).to eq([@tire, @chew_toy])
-        expect(@order_1.merchant_items(@brian.id)).to eq([@pull_toy])
+        expect(@order_1.merchant_items(@meg.id).first.name).to eq(@tire.name)
+        expect(@order_1.merchant_items(@meg.id).first.description).to eq(@tire.description)
+        expect(@order_1.merchant_items(@meg.id).first.order_price).to eq(@item_order_1.order_price)
+        expect(@order_1.merchant_items(@meg.id).first.quantity).to eq(@item_order_1.quantity)
+
+        expect(@order_1.merchant_items(@meg.id).second.name).to eq(@chew_toy.name)
+        expect(@order_1.merchant_items(@meg.id).second.description).to eq(@chew_toy.description)
+        expect(@order_1.merchant_items(@meg.id).second.order_price).to eq(@item_order_3.order_price)
+        expect(@order_1.merchant_items(@meg.id).second.quantity).to eq(@item_order_3.quantity)
+
+        expect(@order_1.merchant_items(@brian.id).first.name).to eq(@pull_toy.name)
+        expect(@order_1.merchant_items(@brian.id).first.description).to eq(@pull_toy.description)
+        expect(@order_1.merchant_items(@brian.id).first.order_price).to eq(@item_order_2.order_price)
+        expect(@order_1.merchant_items(@brian.id).first.quantity).to eq(@item_order_2.quantity)
       end
 
-      it "does not return items belonging to another merchant" do
+      it "returns items with discounted prices" do
         @chew_toy = @meg.items.create(name: "Chew Toy", description: "Great chew toy!", price: 20, image: "http://lovencaretoys.com/image/cache/dog/tug-toy-dog-pull-9010_2-800x800.jpg", inventory: 15)
-        @item_order_3 = @order_1.item_orders.create!(item: @chew_toy, price: @chew_toy.price, quantity: 4)
+        @item_order_3 = @order_1.item_orders.create!(item: @chew_toy, order_price: 15, quantity: 4)
 
-        expect(@order_1.merchant_items(@brian.id)).to_not eq([@tire, @chew_toy])
-        expect(@order_1.merchant_items(@meg.id)).to_not eq([@pull_toy])
+        expect(@order_1.merchant_items(@meg.id).second.name).to eq(@chew_toy.name)
+        expect(@order_1.merchant_items(@meg.id).second.description).to eq(@chew_toy.description)
+        expect(@order_1.merchant_items(@meg.id).second.order_price).to eq(15)
+        expect(@order_1.merchant_items(@meg.id).second.quantity).to eq(@item_order_3.quantity)
       end
     end
 
