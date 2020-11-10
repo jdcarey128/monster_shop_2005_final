@@ -102,7 +102,7 @@ RSpec.describe "As an admin" do
       ItemOrder.create!(
         order_id: order.id,
         item_id: @tire.id,
-        price: @tire.price,
+        order_price: @tire.price,
         quantity: 1
       )
 

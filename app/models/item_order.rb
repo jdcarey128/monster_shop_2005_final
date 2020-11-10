@@ -12,6 +12,6 @@ class ItemOrder <ApplicationRecord
   end
 
   def subtotal
-    price * quantity
+    order_price * quantity
   end
 end

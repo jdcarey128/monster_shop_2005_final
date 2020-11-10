@@ -17,7 +17,7 @@
       <h3><%= item_order.item.name %></h3><br/>
       <%= image_tag(item_order.item.image) %>
       <p>Item Description: <%= item_order.item.description %><br>
-      Item Price: <%= number_to_currency(item_order.price) %>
+      Item Price: <%= number_to_currency(item_order.order_price) %>
       <% if item_order.discount_applied? %>
         <i> (Discount Applied)</i>
       <% end %><br>

@@ -14,12 +14,12 @@ RSpec.describe 'merchant show page', type: :feature do
       @order_2 = Order.create!(name: 'Brian', address: '123 Zanti St', city: 'Denver', state: 'CO', zip: 80204, user_id: user.id)
       @order_3 = Order.create!(name: 'Mike', address: '123 Dao St', city: 'Denver', state: 'CO', zip: 80210, user_id: user.id)
 
-      @order_1.item_orders.create!(item: @tire, price: @tire.price, quantity: 2)
-      @order_1.item_orders.create!(item: @pull_toy, price: @pull_toy.price, quantity: 3)
-      @order_2.item_orders.create!(item: @dog_bone, price: @dog_bone.price, quantity: 2)
-      @order_2.item_orders.create!(item: @pull_toy, price: @pull_toy.price, quantity: 2)
-      @order_2.item_orders.create!(item: @tire, price: @tire.price, quantity: 2)
-      @order_3.item_orders.create!(item: @dog_bone, price: @dog_bone.price, quantity: 5)
+      @order_1.item_orders.create!(item: @tire, order_price: @tire.price, quantity: 2)
+      @order_1.item_orders.create!(item: @pull_toy, order_price: @pull_toy.price, quantity: 3)
+      @order_2.item_orders.create!(item: @dog_bone, order_price: @dog_bone.price, quantity: 2)
+      @order_2.item_orders.create!(item: @pull_toy, order_price: @pull_toy.price, quantity: 2)
+      @order_2.item_orders.create!(item: @tire, order_price: @tire.price, quantity: 2)
+      @order_3.item_orders.create!(item: @dog_bone, order_price: @dog_bone.price, quantity: 5)
     end
 
     it 'I can see a merchants statistics' do
