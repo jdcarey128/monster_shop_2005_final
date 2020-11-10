@@ -133,5 +133,35 @@ describe Item, type: :model do
       expect(@chain.insufficient_inventory?(order_2.id)).to eq(true)
       expect(@chain.insufficient_inventory?(order_1.id)).to eq(false)
     end
+
+    describe '#item_order_price()' do
+      it 'returns the item_order price for an item within a specific order' do
+        item = create(:item, price: 20)
+
+        order = create(:order)
+        order_2 = create(:order)
+
+        item_order = create(:item_order, item: item, order: order, quantity: 10)
+        item_order_2 = create(:item_order, item: item, order: order_2, order_price: 10, quantity: 5)
+
+        expect(item.item_order_price(order)).to eq(20)
+        expect(item.item_order_price(order_2)).to eq(10)
+      end
+    end
+
+    describe '#item_order_quantity()' do
+      it 'returns the item_order quantity for an item within a specific order' do
+        item = create(:item, price: 20)
+
+        order = create(:order)
+        order_2 = create(:order)
+
+        item_order = create(:item_order, item: item, order: order, quantity: 10)
+        item_order_2 = create(:item_order, item: item, order: order_2, order_price: 10, quantity: 5)
+
+        expect(item.item_order_quantity(order)).to eq(10)
+        expect(item.item_order_quantity(order_2)).to eq(5)
+      end
+    end
   end
 end
